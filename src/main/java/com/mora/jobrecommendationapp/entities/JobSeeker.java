@@ -2,8 +2,10 @@ package com.mora.jobrecommendationapp.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @Data
 @Table(name = "jobseeker")
 public class JobSeeker {
