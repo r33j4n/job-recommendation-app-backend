@@ -1,12 +1,16 @@
 package com.mora.jobrecommendationapp.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "jobseeker")
 public class JobSeeker {
 
@@ -41,4 +45,5 @@ public class JobSeeker {
     private String skills;
     @Column
     private String appliedJobs;
+
 }
