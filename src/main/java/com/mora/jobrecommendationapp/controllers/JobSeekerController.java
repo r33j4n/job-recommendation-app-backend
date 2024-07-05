@@ -2,6 +2,8 @@ package com.mora.jobrecommendationapp.controllers;
 
 import com.mora.jobrecommendationapp.DTO.CreateJobSeekerRequestDTO;
 import com.mora.jobrecommendationapp.DTO.CreateJobSeekerResponseDTO;
+import com.mora.jobrecommendationapp.DTO.LoginJobSeekerRequestDTO;
+import com.mora.jobrecommendationapp.DTO.LoginResponse;
 import com.mora.jobrecommendationapp.services.JobSeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,12 @@ public class JobSeekerController {
     @PostMapping("/create")
     public ResponseEntity<CreateJobSeekerResponseDTO> createJobSeeker(@RequestBody CreateJobSeekerRequestDTO jobSeekerRequest) {
         return ResponseEntity.ok(jobSeekerService.createJobSeeker(jobSeekerRequest));
-
-
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginJobSeekerRequestDTO loginJobSeekerRequestDTO) {
+        return ResponseEntity.ok(jobSeekerService.performlogin(loginJobSeekerRequestDTO));
+    }
+
 
 }

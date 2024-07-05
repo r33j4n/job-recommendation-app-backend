@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -43,7 +48,6 @@ public class JobSeeker {
     private String experience;
     @Column
     private String skills;
-    @Column
-    private String appliedJobs;
-
+    @OneToMany(mappedBy = "jobSeeker", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Application> applications= new ArrayList<>();
 }
