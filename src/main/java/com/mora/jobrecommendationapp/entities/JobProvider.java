@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,23 +20,34 @@ public class JobProvider {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long jobProviderId;
+
     @Column
     private String companyName;
+
     @Column
     private String industry;
+
     @Column
     private String email;
+
     @Column
     private String userName;
+
     @Column
     private String password;
+
     @Column
     private String phoneNumber;
+
     @Column
     private String address;
+
     @Column
     private Date registeredDate;
-    @Column
-    private String postedJobs;
+
+    @OneToMany(mappedBy = "jobProvider", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Job> jobs = new ArrayList<>();
+
 }
+
 
