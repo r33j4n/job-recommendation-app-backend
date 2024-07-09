@@ -48,4 +48,10 @@ public class JobController {
         return ResponseEntity.ok(jobService.deleteJob(id));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> getJobCount() {
+        long count = jobService.getJobCount();
+        return ResponseEntity.ok(count);
+    }
+
 }

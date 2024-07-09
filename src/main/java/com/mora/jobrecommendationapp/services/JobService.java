@@ -92,6 +92,10 @@ public class JobService {
         return deleteJobResponseDTO;
     }
 
+    public long getJobCount() {
+        return jobRepository.countJobs();
+    }
+
 //    public Job createJob(Job job) {
 //        // Check if jobProviderId is provided
 ////        if (job.getJobProviderId() != null) {
