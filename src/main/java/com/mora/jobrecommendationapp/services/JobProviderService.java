@@ -102,4 +102,9 @@ public class JobProviderService {
         JobProvider jobProvider = getJobProviderById(jobProviderId);
         return jobProvider.getJobs();
     }
+
+    public Long getJobCountByJobProviderId(Long jobProviderId) {
+        JobProvider jobProvider = getJobProviderById(jobProviderId);
+        return (long) jobProvider.getJobs().size();
+    }
 }

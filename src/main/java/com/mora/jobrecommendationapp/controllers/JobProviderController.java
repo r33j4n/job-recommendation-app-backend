@@ -41,4 +41,10 @@ public class JobProviderController {
         List<Job> jobs = jobProviderService.getJobsByJobProviderId(jobProviderId);
         return ResponseEntity.ok(jobs);
     }
+
+    @GetMapping("/{id}/jobcount")
+    public ResponseEntity<Long> getJobCountByJobProviderId(@PathVariable("id") Long jobProviderId) {
+        Long jobCount = jobProviderService.getJobCountByJobProviderId(jobProviderId);
+        return ResponseEntity.ok(jobCount);
+    }
 }
