@@ -2,10 +2,13 @@ package com.mora.jobrecommendationapp.controllers;
 
 import com.mora.jobrecommendationapp.DTO.CreateApplicationRequestDTO;
 import com.mora.jobrecommendationapp.DTO.CreateApplicationResponseDTO;
+import com.mora.jobrecommendationapp.entities.Job;
 import com.mora.jobrecommendationapp.services.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/application")
@@ -18,8 +21,11 @@ public class ApplicationController {
         return ResponseEntity.ok(applicationService.createApplication(createApplicationRequestDTO));
     }
 
-    @PostMapping("/count")
-    public long getApplicationCountByJobId(@RequestParam Long jobId) {
-        return applicationService.getApplicationCountByJobId(jobId);
-    }
+        @GetMapping("/count/{jobId}")
+        public Long getApplicationCountByJobId(@PathVariable Long jobId) {
+            return applicationService.getApplicationCountByJobId(jobId);
+        }
+
+
+
 }

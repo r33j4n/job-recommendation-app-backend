@@ -22,17 +22,18 @@ public class Application {
     @Column
     private Long applicationId;
     @Column
-    private String applicationStatus;
+    private Boolean applicationStatus;
     @Column
     private Date jobAppliedDate;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id",nullable = false)
-    @JsonIgnoreProperties("applications")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "applications"})
     private Job job;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_seeker_id",nullable = false)
-    @JsonIgnoreProperties("applications")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "applications"})
     private JobSeeker jobSeeker;
 }

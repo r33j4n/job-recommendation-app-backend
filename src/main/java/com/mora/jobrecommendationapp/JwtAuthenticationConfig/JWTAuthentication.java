@@ -29,6 +29,8 @@ public class JWTAuthentication {
         assert jobSeeker != null;
         String token= Jwts.builder()
                 .claim("userName",jobSeeker.getUserName())
+                .claim("jobSeekerId",jobSeeker.getJobSeekerId())
+                .claim("role","JobSeeker")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*10))
                 .signWith(SignatureAlgorithm.HS512,secretKey)
@@ -45,6 +47,8 @@ public class JWTAuthentication {
         assert jobProvider != null;
         String token= Jwts.builder()
                 .claim("userName",jobProvider.getUserName())
+                .claim("jobProviderId",jobProvider.getJobProviderId())
+                .claim("role","JobProvider")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*10))
                 .signWith(SignatureAlgorithm.HS512,secretKey)

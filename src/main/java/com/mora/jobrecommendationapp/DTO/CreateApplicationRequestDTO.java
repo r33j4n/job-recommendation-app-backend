@@ -9,7 +9,7 @@ import java.util.Date;
 @Builder
 public class CreateApplicationRequestDTO {
 
-    private String applicationStatus;
+    private Boolean applicationStatus;
     private Date jobAppliedDate;
     private Long jobSeekerId;
     private Long jobId;

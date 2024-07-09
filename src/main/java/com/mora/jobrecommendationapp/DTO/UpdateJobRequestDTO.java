@@ -4,10 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
-
 @Data
 @Builder
-public class CreateJobRequestDTO {
+public class UpdateJobRequestDTO {
 
     private String jobTitle;
     private String jobDescription;
@@ -15,7 +14,6 @@ public class CreateJobRequestDTO {
     private String jobExperience;
     private String qualifiedEducation;
     private String jobSkills;
-    private Date jobPostedDate;
     private Boolean isHired;
     private Long jobProviderId;
 }

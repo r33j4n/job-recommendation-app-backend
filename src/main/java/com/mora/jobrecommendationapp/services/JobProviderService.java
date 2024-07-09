@@ -1,10 +1,8 @@
 package com.mora.jobrecommendationapp.services;
 
-import com.mora.jobrecommendationapp.DTO.CreateJobProviderRequestDTO;
-import com.mora.jobrecommendationapp.DTO.CreateJobProviderResponseDTO;
-import com.mora.jobrecommendationapp.DTO.LoginJobProviderRequestDTO;
-import com.mora.jobrecommendationapp.DTO.LoginResponse;
+import com.mora.jobrecommendationapp.DTO.*;
 import com.mora.jobrecommendationapp.JwtAuthenticationConfig.JWTAuthentication;
+import com.mora.jobrecommendationapp.entities.Job;
 import com.mora.jobrecommendationapp.entities.JobProvider;
 import com.mora.jobrecommendationapp.entities.JobSeeker;
 import com.mora.jobrecommendationapp.repositories.JobProviderRepository;
@@ -70,5 +68,38 @@ public class JobProviderService {
                 return new LoginResponse("Incorrect Password", false,null);
             }
         }
+    }
+
+    public UpdateJobProviderResponseDTO updateJobProvider(long id, UpdateJobProviderRequestDTO updateJobProviderRequest) {
+
+        JobProvider jobProvider = jobProviderRepository.findById(id).get();;
+//        jobProvider = JobProvider.builder()
+//                .companyName(updateJobProviderRequest.getCompanyName())
+//                .industry(updateJobProviderRequest.getIndustry())
+//                .email(updateJobProviderRequest.getEmail())
+//                .phoneNumber(updateJobProviderRequest.getPhoneNumber())
+//                .address(updateJobProviderRequest.getAddress())
+//
+//                .build();
+        jobProvider.setCompanyName(updateJobProviderRequest.getCompanyName());
+        jobProvider.setIndustry(updateJobProviderRequest.getIndustry());
+        jobProvider.setEmail(updateJobProviderRequest.getEmail());
+        jobProvider.setPhoneNumber(updateJobProviderRequest.getPhoneNumber());
+        jobProvider.setAddress(updateJobProviderRequest.getAddress());
+        jobProviderRepository.save(jobProvider);
+        UpdateJobProviderResponseDTO updateJobProviderResponseDTO = UpdateJobProviderResponseDTO.builder().
+                message("Job Provider Updated Successfully")
+                .build();
+        return updateJobProviderResponseDTO;
+    }
+
+    public JobProvider getJobProviderById(Long jobProviderId) {
+        return jobProviderRepository.findById(jobProviderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid job provider ID: " + jobProviderId));
+    }
+
+    public List<Job> getJobsByJobProviderId(Long jobProviderId) {
+        JobProvider jobProvider = getJobProviderById(jobProviderId);
+        return jobProvider.getJobs();
     }
 }

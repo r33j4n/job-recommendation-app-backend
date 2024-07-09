@@ -1,17 +1,12 @@
 package com.mora.jobrecommendationapp.controllers;
 
-import com.mora.jobrecommendationapp.DTO.CreateJobSeekerRequestDTO;
-import com.mora.jobrecommendationapp.DTO.CreateJobSeekerResponseDTO;
-import com.mora.jobrecommendationapp.DTO.LoginJobSeekerRequestDTO;
-import com.mora.jobrecommendationapp.DTO.LoginResponse;
+import com.mora.jobrecommendationapp.DTO.*;
 import com.mora.jobrecommendationapp.services.JobSeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/jobseeker")
 
@@ -28,5 +23,19 @@ public class JobSeekerController {
         return ResponseEntity.ok(jobSeekerService.performlogin(loginJobSeekerRequestDTO));
     }
 
+    @PutMapping ("/update/{id}")
+    public ResponseEntity<UpdateJobSeekerResponseDTO> updateJobSeeker(@PathVariable("id") long id,@RequestBody UpdateJobSeekerRequestDTO updateJobSeekerRequest) {
+        return ResponseEntity.ok(jobSeekerService.updateJobSeeker(id,updateJobSeekerRequest));
+    }
+
+    @GetMapping("/get/{id}")
+    public GetJobSeekerByIDResponseDTO getJobSeekerById(@PathVariable Long id) {
+        return jobSeekerService.getJobSeekerById(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<DeleteJobSeekerResponseDTO> deleteJobSeeker(@PathVariable("id") long id) {
+        return ResponseEntity.ok(jobSeekerService.deleteJobSeeker(id));
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.mora.jobrecommendationapp.controllers;
 
 import com.mora.jobrecommendationapp.DTO.*;
+import com.mora.jobrecommendationapp.entities.Job;
 import com.mora.jobrecommendationapp.entities.JobProvider;
 import com.mora.jobrecommendationapp.services.JobProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/jobprovider")
 public class JobProviderController {
@@ -28,5 +29,16 @@ public class JobProviderController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginJobProviderRequestDTO loginJobProviderRequestDTO) {
         return ResponseEntity.ok(jobProviderService.performlogin(loginJobProviderRequestDTO));
+    }
+
+    @PutMapping ("/update/{id}")
+    public ResponseEntity<UpdateJobProviderResponseDTO> updateJobProvider(@PathVariable("id") long id,@RequestBody UpdateJobProviderRequestDTO updateJobProviderRequest) {
+        return ResponseEntity.ok(jobProviderService.updateJobProvider(id,updateJobProviderRequest));
+    }
+
+    @GetMapping("/{id}/jobs")
+    public ResponseEntity<List<Job>> getJobsByJobProviderId(@PathVariable("id") Long jobProviderId) {
+        List<Job> jobs = jobProviderService.getJobsByJobProviderId(jobProviderId);
+        return ResponseEntity.ok(jobs);
     }
 }
