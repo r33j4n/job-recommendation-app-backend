@@ -1,5 +1,6 @@
 package com.mora.jobrecommendationapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,5 +50,7 @@ public class JobSeeker {
     @Column
     private String skills;
     @OneToMany(mappedBy = "jobSeeker", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Prevents serialization of the jobs list when JobProvider is serialized
     private List<Application> applications= new ArrayList<>();
+
 }

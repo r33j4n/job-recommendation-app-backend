@@ -1,5 +1,6 @@
 package com.mora.jobrecommendationapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -45,12 +46,14 @@ public class Job {
     private Boolean isHired;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "job_provider_id",nullable = false)
-    @JsonIgnoreProperties("jobs")
+    @JoinColumn(name = "job_provider_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "jobs"}) // Ignores the 'jobs' field in JobProvider to prevent recursion
     private JobProvider jobProvider;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Prevents serialization of the jobs list when JobProvider is serialized
     private List<Application> applications = new ArrayList<>();
+
 
 }
 

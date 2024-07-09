@@ -1,9 +1,6 @@
 package com.mora.jobrecommendationapp.services;
 
-import com.mora.jobrecommendationapp.DTO.CreateJobSeekerRequestDTO;
-import com.mora.jobrecommendationapp.DTO.CreateJobSeekerResponseDTO;
-import com.mora.jobrecommendationapp.DTO.LoginJobSeekerRequestDTO;
-import com.mora.jobrecommendationapp.DTO.LoginResponse;
+import com.mora.jobrecommendationapp.DTO.*;
 import com.mora.jobrecommendationapp.JwtAuthenticationConfig.JWTAuthentication;
 import com.mora.jobrecommendationapp.entities.JobSeeker;
 import com.mora.jobrecommendationapp.repositories.JobSeekerRepository;
@@ -65,5 +62,60 @@ public class JobSeekerService {
                 return new LoginResponse("Incorrect Password", false,null);
             }
         }
+    }
+
+    public UpdateJobSeekerResponseDTO updateJobSeeker(long id, UpdateJobSeekerRequestDTO updateJobSeekerRequest) {
+
+        JobSeeker jobSeeker = jobSeekerRepository.findById(id).get();;
+        if (jobSeeker != null) {
+            jobSeeker.setFirstName(updateJobSeekerRequest.getFirstName());
+            jobSeeker.setLastName(updateJobSeekerRequest.getLastName());
+            jobSeeker.setPhoneNumber(updateJobSeekerRequest.getPhoneNumber());
+            jobSeeker.setAddress(updateJobSeekerRequest.getAddress());
+            jobSeeker.setDob(updateJobSeekerRequest.getDob());
+            jobSeeker.setGender(updateJobSeekerRequest.getGender());
+            jobSeekerRepository.save(jobSeeker);
+            UpdateJobSeekerResponseDTO updateJobSeekerResponseDTO = UpdateJobSeekerResponseDTO.builder().
+                    message("Job Seeker Updated Successfully for the user name "+jobSeeker.getUserName())
+                    .build();
+            return updateJobSeekerResponseDTO;
+        }
+
+        UpdateJobSeekerResponseDTO updateJobSeekerResponseDTO = UpdateJobSeekerResponseDTO.builder().
+                message("Job Seeker Not Updated ")
+                .build();
+        return updateJobSeekerResponseDTO;    }
+
+
+    // Update your service method to fetch the JobSeeker entity eagerly
+    public GetJobSeekerByIDResponseDTO getJobSeekerById(Long id) {
+        JobSeeker jobSeeker = jobSeekerRepository.findById(id).get();
+        GetJobSeekerByIDResponseDTO getJobSeekerByIDResponseDTO = GetJobSeekerByIDResponseDTO.builder()
+                .firstName(jobSeeker.getFirstName())
+                .lastName(jobSeeker.getLastName())
+                .email(jobSeeker.getEmail())
+                .phoneNumber(jobSeeker.getPhoneNumber())
+                .address(jobSeeker.getAddress())
+                .dob(jobSeeker.getDob())
+                .gender(jobSeeker.getGender())
+                .registeredDate(jobSeeker.getRegisteredDate())
+                .userName(jobSeeker.getUserName())
+                .build();
+        return getJobSeekerByIDResponseDTO;
+    }
+
+    public DeleteJobSeekerResponseDTO deleteJobSeeker(long id) {
+        JobSeeker jobSeeker = jobSeekerRepository.findById(id).get();
+        if (jobSeeker != null) {
+            jobSeekerRepository.delete(jobSeeker);
+            DeleteJobSeekerResponseDTO deleteJobSeekerResponseDTO = DeleteJobSeekerResponseDTO.builder().
+                    message("Job Seeker Deleted Successfully ")
+                    .build();
+            return deleteJobSeekerResponseDTO;
+        }
+        DeleteJobSeekerResponseDTO deleteJobSeekerResponseDTO = DeleteJobSeekerResponseDTO.builder().
+                message("Job Seeker Not Deleted")
+                .build();
+        return deleteJobSeekerResponseDTO;
     }
 }
