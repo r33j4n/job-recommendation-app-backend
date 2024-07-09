@@ -107,4 +107,27 @@ public class JobProviderService {
         JobProvider jobProvider = getJobProviderById(jobProviderId);
         return (long) jobProvider.getJobs().size();
     }
+
+//    public void deleteJobProviderById(Long jobProviderId) {
+//        if (jobProviderRepository.existsById(jobProviderId)) {
+//            jobProviderRepository.deleteById(jobProviderId);
+//        } else {
+//            throw new IllegalArgumentException("Invalid job provider ID: " + jobProviderId);
+//        }
+//    }
+
+    public DeleteJobSeekerResponseDTO deleteJobProviderById(Long jobProviderId) {
+        if (jobProviderRepository.existsById(jobProviderId)) {
+            jobProviderRepository.deleteById(jobProviderId);
+            DeleteJobSeekerResponseDTO deleteJobSeekerResponseDTO = DeleteJobSeekerResponseDTO.builder().
+                    message("Job Seeker Deleted Successfully ")
+                    .build();
+            return deleteJobSeekerResponseDTO;
+        } else {
+            DeleteJobSeekerResponseDTO deleteJobSeekerResponseDTO = DeleteJobSeekerResponseDTO.builder().
+                    message("Job Seeker Not Deleted")
+                    .build();
+            return deleteJobSeekerResponseDTO;
+        }
+    }
 }
