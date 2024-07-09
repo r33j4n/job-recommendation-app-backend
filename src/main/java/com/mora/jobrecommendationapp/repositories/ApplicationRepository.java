@@ -1,6 +1,7 @@
 package com.mora.jobrecommendationapp.repositories;
 
 import com.mora.jobrecommendationapp.entities.Application;
+import com.mora.jobrecommendationapp.entities.Job;
 import com.mora.jobrecommendationapp.entities.JobSeeker;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     // Method to count applications by job seeker ID
     @Query("SELECT COUNT(a) FROM Application a WHERE a.jobSeeker.jobSeekerId = :jobSeekerId")
     long countByJobSeekerId(@Param("jobSeekerId") Long jobSeekerId);
+
+    // Method to find jobs by job seeker ID
+    @Query("SELECT a.job FROM Application a WHERE a.jobSeeker.jobSeekerId = :jobSeekerId")
+    List<Job> findJobsByJobSeekerId(@Param("jobSeekerId") Long jobSeekerId);
 }

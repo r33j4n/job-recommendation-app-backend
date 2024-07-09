@@ -54,4 +54,8 @@ public class ApplicationService {
         return applicationRepository.countByJobSeekerId(jobSeekerId);
     }
 
+    public List<Job> getJobsByJobSeekerId(Long jobSeekerId) {
+        return applicationRepository.findJobsByJobSeekerId(jobSeekerId);
+    }
+
 }

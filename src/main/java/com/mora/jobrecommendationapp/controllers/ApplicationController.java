@@ -31,6 +31,10 @@ public class ApplicationController {
         return applicationService.getApplicationCountByJobSeekerId(jobSeekerId);
     }
 
+    @GetMapping("/jobs/{jobSeekerId}")
+    public List<Job> getJobsByJobSeekerId(@PathVariable Long jobSeekerId) {
+        return applicationService.getJobsByJobSeekerId(jobSeekerId);
+    }
 
 
 }
