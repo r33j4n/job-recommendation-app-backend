@@ -50,4 +50,8 @@ public class ApplicationService {
         return applicationRepository.countByJobId(jobId);
     }
 
+    public long getApplicationCountByJobSeekerId(Long jobSeekerId) {
+        return applicationRepository.countByJobSeekerId(jobSeekerId);
+    }
+
 }
