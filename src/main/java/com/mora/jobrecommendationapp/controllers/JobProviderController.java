@@ -50,7 +50,6 @@ public class JobProviderController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<DeleteJobSeekerResponseDTO> deleteJobProviderById(@PathVariable("id") Long jobProviderId) {
-//        jobProviderService.deleteJobProviderById(jobProviderId);
         return ResponseEntity.ok(jobProviderService.deleteJobProviderById(jobProviderId));
     }
 }

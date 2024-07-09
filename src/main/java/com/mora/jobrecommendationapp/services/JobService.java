@@ -84,6 +84,14 @@ public class JobService {
         return mapToDTO(job.orElse(null));
     }
 
+    public DeleteJobResponseDTO deleteJob(long id) {
+        jobRepository.deleteById(id);
+        DeleteJobResponseDTO deleteJobResponseDTO = DeleteJobResponseDTO.builder()
+                .message("Job Deleted Successfully")
+                .build();
+        return deleteJobResponseDTO;
+    }
+
 //    public Job createJob(Job job) {
 //        // Check if jobProviderId is provided
 ////        if (job.getJobProviderId() != null) {
