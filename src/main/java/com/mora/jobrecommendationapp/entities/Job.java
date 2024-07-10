@@ -24,19 +24,19 @@ public class Job {
     @Column
     private String jobTitle;
 
-    @Column
+    @Column (length = 10000)
     private String jobDescription;
 
     @Column
     private String jobLocation;
 
-    @Column
+    @Column (length = 10000)
     private String jobExperience;
 
-    @Column
+    @Column (length = 10000)
     private String qualifiedEducation;
 
-    @Column
+    @Column (length = 10000)
     private String jobSkills;
 
     @Column
