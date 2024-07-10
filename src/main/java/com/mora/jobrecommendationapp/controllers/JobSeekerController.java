@@ -43,4 +43,9 @@ public class JobSeekerController {
         return ResponseEntity.ok(jobSeekerService.updateCV(id));
     }
 
+    @PutMapping("/update_skills/{id}")
+    public ResponseEntity<UpdateJobSeekerSkillsResponseDTO> updateSkills(@PathVariable("id") long id,@RequestBody UpdateJobSeekerSkillsRequestDTO updateJobSeekerSkillsRequest) {
+        return ResponseEntity.ok(jobSeekerService.updateSkills(id,updateJobSeekerSkillsRequest));
+    }
+
 }

@@ -101,6 +101,9 @@ public class JobSeekerService {
                 .gender(jobSeeker.getGender())
                 .registeredDate(jobSeeker.getRegisteredDate())
                 .userName(jobSeeker.getUserName())
+                .education(jobSeeker.getEducation())
+                .experience(jobSeeker.getExperience())
+                .skills(jobSeeker.getSkills())
                 .isCvUploaded(jobSeeker.getIsCvUploaded())
                 .build();
         return getJobSeekerByIDResponseDTO;
@@ -135,5 +138,24 @@ public class JobSeekerService {
                 message("CV Not Updated")
                 .build();
         return uploadCVResponseDTO;
+    }
+
+    public UpdateJobSeekerSkillsResponseDTO updateSkills(long id, UpdateJobSeekerSkillsRequestDTO updateJobSeekerSkillsRequest) {
+
+        JobSeeker jobSeeker = jobSeekerRepository.findById(id).get();
+        if (jobSeeker != null) {
+            jobSeeker.setSkills(updateJobSeekerSkillsRequest.getSkills());
+            jobSeeker.setExperience(updateJobSeekerSkillsRequest.getExperience());
+            jobSeeker.setEducation(updateJobSeekerSkillsRequest.getEducation());
+            jobSeekerRepository.save(jobSeeker);
+            UpdateJobSeekerSkillsResponseDTO updateJobSeekerSkillsResponseDTO = UpdateJobSeekerSkillsResponseDTO.builder().
+                    message("Skills Updated Successfully")
+                    .build();
+            return updateJobSeekerSkillsResponseDTO;
+        }
+        UpdateJobSeekerSkillsResponseDTO updateJobSeekerSkillsResponseDTO = UpdateJobSeekerSkillsResponseDTO.builder().
+                message("Skills Not Updated")
+                .build();
+        return updateJobSeekerSkillsResponseDTO;
     }
 }
