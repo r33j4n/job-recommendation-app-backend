@@ -36,6 +36,7 @@ public class JobSeekerService {
                 .address(jobSeekerRequest.getAddress())
                 .dob(jobSeekerRequest.getDob())
                 .gender(jobSeekerRequest.getGender())
+                .isCvUploaded(false)
                 .registeredDate(jobSeekerRequest.getRegisteredDate())
                 .build();
         jobSeekerRepository.save(jobSeeker);
@@ -100,6 +101,7 @@ public class JobSeekerService {
                 .gender(jobSeeker.getGender())
                 .registeredDate(jobSeeker.getRegisteredDate())
                 .userName(jobSeeker.getUserName())
+                .isCvUploaded(jobSeeker.getIsCvUploaded())
                 .build();
         return getJobSeekerByIDResponseDTO;
     }
@@ -117,5 +119,21 @@ public class JobSeekerService {
                 message("Job Seeker Not Deleted")
                 .build();
         return deleteJobSeekerResponseDTO;
+    }
+
+    public UploadCVResponseDTO updateCV(long id) {
+        JobSeeker jobSeeker = jobSeekerRepository.findById(id).get();
+        if (jobSeeker != null) {
+            jobSeeker.setIsCvUploaded(true);
+            jobSeekerRepository.save(jobSeeker);
+            UploadCVResponseDTO uploadCVResponseDTO = UploadCVResponseDTO.builder().
+                    message("CV Updated Successfully")
+                    .build();
+            return uploadCVResponseDTO;
+        }
+        UploadCVResponseDTO uploadCVResponseDTO = UploadCVResponseDTO.builder().
+                message("CV Not Updated")
+                .build();
+        return uploadCVResponseDTO;
     }
 }

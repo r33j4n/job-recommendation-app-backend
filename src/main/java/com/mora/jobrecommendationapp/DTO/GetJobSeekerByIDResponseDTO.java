@@ -16,4 +16,8 @@ public class GetJobSeekerByIDResponseDTO {
     private String gender;
     private String registeredDate;
     private String userName;
+    private String education;
+    private String experience;
+    private String skills;
+    private Boolean isCvUploaded;
 }

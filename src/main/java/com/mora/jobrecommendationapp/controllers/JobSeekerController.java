@@ -38,4 +38,9 @@ public class JobSeekerController {
         return ResponseEntity.ok(jobSeekerService.deleteJobSeeker(id));
     }
 
+    @PutMapping("/update_cv/{id}")
+    public ResponseEntity<UploadCVResponseDTO> updateCV(@PathVariable("id") long id) {
+        return ResponseEntity.ok(jobSeekerService.updateCV(id));
+    }
+
 }

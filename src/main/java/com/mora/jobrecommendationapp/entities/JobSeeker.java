@@ -49,6 +49,8 @@ public class JobSeeker {
     private String experience;
     @Column
     private String skills;
+    @Column
+    private Boolean isCvUploaded;
     @OneToMany(mappedBy = "jobSeeker", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore // Prevents serialization of the jobs list when JobProvider is serialized
     private List<Application> applications= new ArrayList<>();
