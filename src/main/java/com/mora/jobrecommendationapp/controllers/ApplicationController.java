@@ -2,6 +2,7 @@ package com.mora.jobrecommendationapp.controllers;
 
 import com.mora.jobrecommendationapp.DTO.CreateApplicationRequestDTO;
 import com.mora.jobrecommendationapp.DTO.CreateApplicationResponseDTO;
+import com.mora.jobrecommendationapp.entities.Application;
 import com.mora.jobrecommendationapp.entities.Job;
 import com.mora.jobrecommendationapp.services.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/application")
 public class ApplicationController {
@@ -35,6 +36,12 @@ public class ApplicationController {
     public List<Job> getJobsByJobSeekerId(@PathVariable Long jobSeekerId) {
         return applicationService.getJobsByJobSeekerId(jobSeekerId);
     }
+
+    @GetMapping("/all")
+    public List<Application> getAllApplications() {
+        return applicationService.getAllApplications();
+    }
+
 
 
 }

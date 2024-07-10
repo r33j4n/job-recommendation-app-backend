@@ -58,4 +58,8 @@ public class ApplicationService {
         return applicationRepository.findJobsByJobSeekerId(jobSeekerId);
     }
 
+    public List<Application> getAllApplications() {
+        return applicationRepository.findAll();
+    }
+
 }
