@@ -52,4 +52,9 @@ public class JobProviderController {
     public ResponseEntity<DeleteJobSeekerResponseDTO> deleteJobProviderById(@PathVariable("id") Long jobProviderId) {
         return ResponseEntity.ok(jobProviderService.deleteJobProviderById(jobProviderId));
     }
+
+    @GetMapping("/get/{id}")
+    public GetJobProviderByIDResponseDTO getJobProviderById(@PathVariable Long id) {
+        return jobProviderService.getJobProviderById1(id);
+    }
 }
