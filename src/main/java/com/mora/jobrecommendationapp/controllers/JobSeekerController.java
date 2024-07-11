@@ -33,6 +33,11 @@ public class JobSeekerController {
         return jobSeekerService.getJobSeekerById(id);
     }
 
+    @GetMapping("/getSkills/{id}")
+    public GetJobSeekerSkillsResponseDTO getJobSeekerSkillsById(@PathVariable Long id) {
+        return jobSeekerService.getJobSeekerSkillsById(id);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<DeleteJobSeekerResponseDTO> deleteJobSeeker(@PathVariable("id") long id) {
         return ResponseEntity.ok(jobSeekerService.deleteJobSeeker(id));

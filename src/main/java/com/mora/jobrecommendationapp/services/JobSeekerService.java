@@ -158,4 +158,13 @@ public class JobSeekerService {
                 .build();
         return updateJobSeekerSkillsResponseDTO;
     }
+
+    public GetJobSeekerSkillsResponseDTO getJobSeekerSkillsById(Long id) {
+        JobSeeker jobSeeker = jobSeekerRepository.findById(id).get();
+        GetJobSeekerSkillsResponseDTO getJobSeekerSkillsResponseDTO = GetJobSeekerSkillsResponseDTO.builder()
+                .id(jobSeeker.getJobSeekerId())
+                .skills(jobSeeker.getSkills())
+                .build();
+        return getJobSeekerSkillsResponseDTO;
+    }
 }
