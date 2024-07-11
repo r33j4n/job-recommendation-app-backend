@@ -130,4 +130,18 @@ public class JobProviderService {
             return deleteJobSeekerResponseDTO;
         }
     }
+
+    public GetJobProviderByIDResponseDTO getJobProviderById1(Long id) {
+        JobProvider jobProvider = jobProviderRepository.findById(id).get();
+        GetJobProviderByIDResponseDTO getJobProviderByIDResponseDTO = GetJobProviderByIDResponseDTO.builder()
+                .companyName(jobProvider.getCompanyName())
+                .industry(jobProvider.getIndustry())
+                .email(jobProvider.getEmail())
+                .phoneNumber(jobProvider.getPhoneNumber())
+                .address(jobProvider.getAddress())
+                .userName(jobProvider.getUserName())
+                .registeredDate(jobProvider.getRegisteredDate())
+                .build();
+        return getJobProviderByIDResponseDTO;
+    }
 }
