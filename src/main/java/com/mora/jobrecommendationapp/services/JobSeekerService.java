@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 
 public class JobSeekerService {
@@ -26,25 +28,33 @@ public class JobSeekerService {
 
     public CreateJobSeekerResponseDTO createJobSeeker(CreateJobSeekerRequestDTO jobSeekerRequest) {
         String encryptedPassword = bCryptPasswordEncoder.encode(jobSeekerRequest.getPassword());
-        JobSeeker jobSeeker = JobSeeker.builder()
-                .firstName(jobSeekerRequest.getFirstName())
-                .lastName(jobSeekerRequest.getLastName())
-                .userName(jobSeekerRequest.getUserName())
-                .email(jobSeekerRequest.getEmail())
-                .password(encryptedPassword)
-                .phoneNumber(jobSeekerRequest.getPhoneNumber())
-                .address(jobSeekerRequest.getAddress())
-                .dob(jobSeekerRequest.getDob())
-                .gender(jobSeekerRequest.getGender())
-                .isCvUploaded(false)
-                .registeredDate(jobSeekerRequest.getRegisteredDate())
-                .build();
-        jobSeekerRepository.save(jobSeeker);
-        CreateJobSeekerResponseDTO createJobSeekerResponseDTO = CreateJobSeekerResponseDTO.builder().
-                message("Job Seeker Created Successfully for the user name "+jobSeekerRequest.getUserName())
-                .build();
-
-        return createJobSeekerResponseDTO;
+        JobSeeker jobSeeker1 = jobSeekerRepository.findByUserName(jobSeekerRequest.getUserName());
+        if (jobSeeker1 == null) {
+            JobSeeker jobSeeker = JobSeeker.builder()
+                    .firstName(jobSeekerRequest.getFirstName())
+                    .lastName(jobSeekerRequest.getLastName())
+                    .userName(jobSeekerRequest.getUserName())
+                    .email(jobSeekerRequest.getEmail())
+                    .password(encryptedPassword)
+                    .phoneNumber(jobSeekerRequest.getPhoneNumber())
+                    .address(jobSeekerRequest.getAddress())
+                    .dob(jobSeekerRequest.getDob())
+                    .gender(jobSeekerRequest.getGender())
+                    .isCvUploaded(false)
+                    .registeredDate(jobSeekerRequest.getRegisteredDate())
+                    .build();
+            jobSeekerRepository.save(jobSeeker);
+            CreateJobSeekerResponseDTO createJobSeekerResponseDTO = CreateJobSeekerResponseDTO.builder().
+                    message("Job Seeker Created Successfully for the user name "+jobSeekerRequest.getUserName())
+                    .isDuplicated(false)
+                    .build();
+            return createJobSeekerResponseDTO;
+        } else {
+            CreateJobSeekerResponseDTO createJobSeekerResponseDTO = CreateJobSeekerResponseDTO.builder().
+                    message("Job Seeker Already Exists for the user name "+jobSeekerRequest.getUserName())
+                    .isDuplicated(true)
+                    .build();
+            return createJobSeekerResponseDTO;        }
     }
 
     public LoginResponse performlogin(LoginJobSeekerRequestDTO loginJobSeekerRequestDTO) {
@@ -75,6 +85,9 @@ public class JobSeekerService {
             jobSeeker.setAddress(updateJobSeekerRequest.getAddress());
             jobSeeker.setDob(updateJobSeekerRequest.getDob());
             jobSeeker.setGender(updateJobSeekerRequest.getGender());
+            jobSeeker.setEducation(updateJobSeekerRequest.getEducation());
+            jobSeeker.setExperience(updateJobSeekerRequest.getExperience());
+            jobSeeker.setSkills(updateJobSeekerRequest.getSkills());
             jobSeekerRepository.save(jobSeeker);
             UpdateJobSeekerResponseDTO updateJobSeekerResponseDTO = UpdateJobSeekerResponseDTO.builder().
                     message("Job Seeker Updated Successfully for the user name "+jobSeeker.getUserName())

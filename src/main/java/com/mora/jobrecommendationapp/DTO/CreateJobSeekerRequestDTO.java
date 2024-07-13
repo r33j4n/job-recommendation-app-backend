@@ -19,4 +19,5 @@ public class CreateJobSeekerRequestDTO {
     private String dob;
     private String gender;
     private String registeredDate;
+    private Boolean isCvUploaded;
 }
