@@ -14,7 +14,7 @@ public class UpdateJobSeekerRequestDTO {
     private String dob;
     private String gender;
 
-//    private String education;
-//    private String experience;
-//    private String skills;
+    private String education;
+    private String experience;
+    private String skills;
 }

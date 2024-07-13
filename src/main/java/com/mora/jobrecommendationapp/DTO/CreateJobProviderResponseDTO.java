@@ -8,4 +8,5 @@ import lombok.Data;
 public class CreateJobProviderResponseDTO {
 
     private String message;
+    private Boolean isDuplicated;
 }
