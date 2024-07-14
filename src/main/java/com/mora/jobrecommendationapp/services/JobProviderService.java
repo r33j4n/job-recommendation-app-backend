@@ -30,22 +30,31 @@ public class JobProviderService {
 
     public CreateJobProviderResponseDTO createJobProvider(CreateJobProviderRequestDTO jobProviderRequest) {
         String encryptedPassword = bCryptPasswordEncoder.encode(jobProviderRequest.getPassword());
-
-        JobProvider jobProvider = JobProvider.builder()
-                .companyName(jobProviderRequest.getCompanyName())
-                .industry(jobProviderRequest.getIndustry())
-                .email(jobProviderRequest.getEmail())
-                .userName(jobProviderRequest.getUserName())
-                .password(encryptedPassword)
-                .phoneNumber(jobProviderRequest.getPhoneNumber())
-                .address(jobProviderRequest.getAddress())
-                .registeredDate(jobProviderRequest.getRegisteredDate())
-                .build();
-        jobProviderRepository.save(jobProvider);
-        CreateJobProviderResponseDTO createJobProviderResponseDTO = CreateJobProviderResponseDTO.builder().
-                message("Job Provider Created Successfully for the company "+jobProviderRequest.getCompanyName())
-                .build();
-        return createJobProviderResponseDTO;
+        JobProvider jobProvider1 = jobProviderRepository.findByUserName(jobProviderRequest.getUserName());
+        if (jobProvider1 == null) {
+            JobProvider jobProvider = JobProvider.builder()
+                    .companyName(jobProviderRequest.getCompanyName())
+                    .industry(jobProviderRequest.getIndustry())
+                    .email(jobProviderRequest.getEmail())
+                    .userName(jobProviderRequest.getUserName())
+                    .password(encryptedPassword)
+                    .phoneNumber(jobProviderRequest.getPhoneNumber())
+                    .address(jobProviderRequest.getAddress())
+                    .registeredDate(jobProviderRequest.getRegisteredDate())
+                    .build();
+            jobProviderRepository.save(jobProvider);
+            CreateJobProviderResponseDTO createJobProviderResponseDTO = CreateJobProviderResponseDTO.builder().
+                    message("Job Provider Created Successfully for the company "+jobProviderRequest.getCompanyName())
+                    .isDuplicated(false)
+                    .build();
+            return createJobProviderResponseDTO;
+        } else {
+            CreateJobProviderResponseDTO createJobProviderResponseDTO = CreateJobProviderResponseDTO.builder().
+                    message("Job Provider Already Exists for the company "+jobProviderRequest.getCompanyName())
+                    .isDuplicated(true)
+                    .build();
+            return createJobProviderResponseDTO;
+        }
     }
 
     public List<JobProvider> getAllJobProvider() {

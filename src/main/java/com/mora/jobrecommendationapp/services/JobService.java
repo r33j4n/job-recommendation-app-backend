@@ -50,6 +50,7 @@ public class JobService {
         job.setJobExperience(updateJobRequestDTO.getJobExperience());
         job.setQualifiedEducation(updateJobRequestDTO.getQualifiedEducation());
         job.setJobSkills(updateJobRequestDTO.getJobSkills());
+        job.setIsHired(updateJobRequestDTO.getIsHired());
         jobRepository.save(job);
         UpdateJobResponseDTO updateJobResponseDTO = UpdateJobResponseDTO.builder().
                 message("Job Seeker Updated Successfully for the user name ")
