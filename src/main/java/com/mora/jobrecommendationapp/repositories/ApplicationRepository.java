@@ -24,4 +24,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     // Method to find jobs by job seeker ID
     @Query("SELECT a.job FROM Application a WHERE a.jobSeeker.jobSeekerId = :jobSeekerId")
     List<Job> findJobsByJobSeekerId(@Param("jobSeekerId") Long jobSeekerId);
+
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Application a WHERE a.job.jobId = :jobId AND a.jobSeeker.jobSeekerId = :jobSeekerId")
+    boolean findByJobSeekerIdAndJobId(@Param("jobSeekerId") Long jobSeekerId,@Param("jobId") Long jobId );
+
 }

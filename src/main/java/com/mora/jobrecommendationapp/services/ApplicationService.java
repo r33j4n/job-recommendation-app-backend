@@ -34,6 +34,14 @@ public class ApplicationService {
         Optional<Job> job = Optional.of(new Job());
         job= jobRepository.findById(createApplicationRequestDTO.getJobId());
 
+        boolean isDuplicateFound = applicationRepository.findByJobSeekerIdAndJobId(createApplicationRequestDTO.getJobSeekerId(),createApplicationRequestDTO.getJobId());
+        if (isDuplicateFound) {
+            return CreateApplicationResponseDTO.builder()
+                    .message("Application Already Exists")
+                    .isDuplicated(true)
+                    .build();
+        }
+        else {
         Application application = Application.builder()
                 .jobAppliedDate(createApplicationRequestDTO.getJobAppliedDate())
                 .applicationStatus(createApplicationRequestDTO.getApplicationStatus())
@@ -43,7 +51,9 @@ public class ApplicationService {
         applicationRepository.save(application);
         return CreateApplicationResponseDTO.builder()
                 .message("Application Created Successfully")
+                .isDuplicated(false)
                 .build();
+        }
     }
 
     public long getApplicationCountByJobId(Long jobId) {
