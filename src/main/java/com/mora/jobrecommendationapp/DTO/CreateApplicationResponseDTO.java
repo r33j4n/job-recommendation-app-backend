@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class CreateApplicationResponseDTO {
     private String message;
+    private Boolean isDuplicated;
 }
