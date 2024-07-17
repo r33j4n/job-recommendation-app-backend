@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 
 public interface JobSeekerRepository extends JpaRepository<JobSeeker, Long> {
     JobSeeker findByUserName(String userName);
+
+    JobSeeker findByEmail(String email);
 }
