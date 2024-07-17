@@ -30,7 +30,7 @@ public class PasswordResetToken {
     public PasswordResetToken(String token, JobSeeker jobSeeker) {
         this.token = token;
         this.jobSeeker = jobSeeker;
-        this.expiryDate = LocalDateTime.now().plusHours(24); // Token valid for 24 hours
+        this.expiryDate = LocalDateTime.now().plusHours(1); // Token valid for 24 hours
     }
 
     public boolean isExpired() {

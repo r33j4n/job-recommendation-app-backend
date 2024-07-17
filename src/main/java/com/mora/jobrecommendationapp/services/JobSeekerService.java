@@ -11,7 +11,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -212,14 +214,29 @@ public class JobSeekerService {
 //    }
 
     public void forgotPassword(String email) {
+
         JobSeeker jobSeeker = jobSeekerRepository.findByEmail(email);
+
         if (jobSeeker != null) {
             String token = UUID.randomUUID().toString();
-            PasswordResetToken resetToken = new PasswordResetToken(token, jobSeeker);
+            Optional<PasswordResetToken> existingTokenOpt = tokenRepository.findByJobSeeker(jobSeeker);
+
+            PasswordResetToken resetToken;
+            if (existingTokenOpt.isPresent()) {
+                // Update the existing token
+                resetToken = existingTokenOpt.get();
+                resetToken.setToken(token);
+                resetToken.setExpiryDate(LocalDateTime.now().plusHours(24)); // Set a new expiry date if needed
+            } else {
+                // Create a new token
+                resetToken = new PasswordResetToken(token, jobSeeker);
+            }
+
             tokenRepository.save(resetToken);
             emailService.sendResetLink(email, token);
         }
     }
+
 
     public void resetPassword(String token, String newPassword) {
         PasswordResetToken resetToken = tokenRepository.findByToken(token);
@@ -231,5 +248,9 @@ public class JobSeekerService {
         } else {
             throw new RuntimeException("Invalid or expired token.");
         }
+    }
+
+    public JobSeeker getJobSeekerByUserName(String userName) {
+        return jobSeekerRepository.findByUserName(userName);
     }
 }

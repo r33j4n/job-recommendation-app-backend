@@ -20,7 +20,7 @@ public class EmailService {
         message.setTo(email);
         message.setSubject("Password Reset Request");
         // Modify the URL to include the custom path
-        message.setText("To reset your password, click the link below:\n" + resetPasswordUrl + "/alljobs/jobseeker?token=" + token);
+        message.setText("To reset your password, click the link below:\n" + resetPasswordUrl + "/resetpassword/jobSeeker?token=" + token);
         mailSender.send(message);
     }
 }
