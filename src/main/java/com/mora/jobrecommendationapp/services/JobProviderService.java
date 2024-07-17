@@ -2,21 +2,34 @@ package com.mora.jobrecommendationapp.services;
 
 import com.mora.jobrecommendationapp.DTO.*;
 import com.mora.jobrecommendationapp.JwtAuthenticationConfig.JWTAuthentication;
-import com.mora.jobrecommendationapp.entities.Job;
-import com.mora.jobrecommendationapp.entities.JobProvider;
-import com.mora.jobrecommendationapp.entities.JobSeeker;
+import com.mora.jobrecommendationapp.entities.*;
 import com.mora.jobrecommendationapp.repositories.JobProviderRepository;
 import com.mora.jobrecommendationapp.repositories.JobSeekerRepository;
+import com.mora.jobrecommendationapp.repositories.PasswordResetTokenJobProviderRepository;
+import com.mora.jobrecommendationapp.repositories.PasswordResetTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class JobProviderService {
     @Autowired
     JobProviderRepository jobProviderRepository;
+
+    @Autowired
+    private PasswordResetTokenJobProviderRepository tokenJobProviderRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private JWTAuthentication jwtA;
@@ -152,5 +165,46 @@ public class JobProviderService {
                 .registeredDate(jobProvider.getRegisteredDate())
                 .build();
         return getJobProviderByIDResponseDTO;
+    }
+
+    public JobProvider getJobProviderByUserName(String userName) {
+        return jobProviderRepository.findByUserName(userName);
+    }
+
+    public void forgotPassword(String email) {
+        JobProvider jobProvider = jobProviderRepository.findByEmail(email);
+
+        if (jobProvider != null) {
+            String token = UUID.randomUUID().toString();
+            Optional<PasswordResetTokenJobProvider> existingTokenOpt = tokenJobProviderRepository.findByJobProvider(jobProvider);
+
+            PasswordResetTokenJobProvider resetToken;
+            if (existingTokenOpt.isPresent()) {
+                // Update the existing token
+                resetToken = existingTokenOpt.get();
+                resetToken.setToken(token);
+                resetToken.setExpiryDate(LocalDateTime.now().plusHours(24)); // Set a new expiry date if needed
+            } else {
+                // Create a new token
+                resetToken = new PasswordResetTokenJobProvider(token, jobProvider);
+            }
+
+            tokenJobProviderRepository.save(resetToken);
+            emailService.sendResetLinkJobProvider(email, token);
+        }
+    }
+
+
+    public void resetPassword(String token, String newPassword) {
+        PasswordResetTokenJobProvider resetToken = tokenJobProviderRepository.findByToken(token);
+        if (resetToken != null && !resetToken.isExpired()) {
+            JobProvider jobProvider = resetToken.getJobProvider();
+            jobProvider.setPassword(passwordEncoder.encode(newPassword));
+            jobProviderRepository.save(jobProvider);
+            tokenJobProviderRepository.delete(resetToken);
+
+        } else {
+            throw new RuntimeException("Invalid or expired token.");
+        }
     }
 }

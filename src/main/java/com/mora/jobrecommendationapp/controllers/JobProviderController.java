@@ -3,6 +3,7 @@ package com.mora.jobrecommendationapp.controllers;
 import com.mora.jobrecommendationapp.DTO.*;
 import com.mora.jobrecommendationapp.entities.Job;
 import com.mora.jobrecommendationapp.entities.JobProvider;
+import com.mora.jobrecommendationapp.entities.JobSeeker;
 import com.mora.jobrecommendationapp.services.JobProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,5 +57,24 @@ public class JobProviderController {
     @GetMapping("/get/{id}")
     public GetJobProviderByIDResponseDTO getJobProviderById(@PathVariable Long id) {
         return jobProviderService.getJobProviderById1(id);
+    }
+
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgetPasswordRequestDTO forgetPasswordRequestDTO) {
+        JobProvider jobProvider =jobProviderService.getJobProviderByUserName(forgetPasswordRequestDTO.getUserName());
+
+        if (jobProvider != null) {
+            jobProviderService.forgotPassword(jobProvider.getEmail());
+            return ResponseEntity.ok("Password reset link sent to your email.");
+        }
+        else {
+            return ResponseEntity.ok("User not found");
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDTO resetPasswordRequestDTO) {
+        jobProviderService.resetPassword(resetPasswordRequestDTO.getToken(), resetPasswordRequestDTO.getPassword());
+        return ResponseEntity.ok("Password has been reset.");
     }
 }
