@@ -53,4 +53,22 @@ public class JobSeekerController {
         return ResponseEntity.ok(jobSeekerService.updateSkills(id,updateJobSeekerSkillsRequest));
     }
 
+//    @PostMapping("/forgetPassword")
+//    public ResponseEntity<ForgetPasswordResponseDTO> forgetPassword(@RequestBody ForgetPasswordRequestDTO forgetPasswordRequestDTO) {
+//        return ResponseEntity.ok(jobSeekerService.forgetPassword(forgetPasswordRequestDTO));
+//    }
+
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgetPasswordRequestDTO forgetPasswordRequestDTO) {
+        System.out.println(forgetPasswordRequestDTO.getEmailAddress());
+        jobSeekerService.forgotPassword(forgetPasswordRequestDTO.getEmailAddress());
+        return ResponseEntity.ok("Password reset link sent to your email.");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDTO resetPasswordRequestDTO) {
+        jobSeekerService.resetPassword(resetPasswordRequestDTO.getToken(), resetPasswordRequestDTO.getPassword());
+        return ResponseEntity.ok("Password has been reset.");
+    }
+
 }
