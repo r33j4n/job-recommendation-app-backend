@@ -3,16 +3,34 @@ package com.mora.jobrecommendationapp.services;
 import com.mora.jobrecommendationapp.DTO.*;
 import com.mora.jobrecommendationapp.JwtAuthenticationConfig.JWTAuthentication;
 import com.mora.jobrecommendationapp.entities.JobSeeker;
+import com.mora.jobrecommendationapp.entities.PasswordResetToken;
 import com.mora.jobrecommendationapp.repositories.JobSeekerRepository;
+import com.mora.jobrecommendationapp.repositories.PasswordResetTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 
 public class JobSeekerService {
     @Autowired
     JobSeekerRepository jobSeekerRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository tokenRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private JWTAuthentication jwtA;
@@ -177,5 +195,62 @@ public class JobSeekerService {
                 .skills(jobSeeker.getSkills())
                 .build();
         return getJobSeekerSkillsResponseDTO;
+    }
+
+//    public ForgetPasswordResponseDTO forgetPassword(ForgetPasswordRequestDTO forgetPasswordRequestDTO) {
+//        JobSeeker jobSeeker = jobSeekerRepository.findByEmail(forgetPasswordRequestDTO.getEmail());
+//        if (jobSeeker != null) {
+//            String token = UUID.randomUUID().toString();
+//            PasswordResetToken resetToken = new PasswordResetToken(token, jobSeeker);
+//            tokenRepository.save(resetToken);
+//            emailService.sendResetLink(email, token);
+//
+//            ForgetPasswordResponseDTO forgetPasswordResponseDTO = ForgetPasswordResponseDTO.builder().
+//                    message("Password Reset Link Sent Successfully")
+//                    .build();
+//            return forgetPasswordResponseDTO;
+//        }
+//
+//    }
+
+    public void forgotPassword(String email) {
+
+        JobSeeker jobSeeker = jobSeekerRepository.findByEmail(email);
+
+        if (jobSeeker != null) {
+            String token = UUID.randomUUID().toString();
+            Optional<PasswordResetToken> existingTokenOpt = tokenRepository.findByJobSeeker(jobSeeker);
+
+            PasswordResetToken resetToken;
+            if (existingTokenOpt.isPresent()) {
+                // Update the existing token
+                resetToken = existingTokenOpt.get();
+                resetToken.setToken(token);
+                resetToken.setExpiryDate(LocalDateTime.now().plusHours(24)); // Set a new expiry date if needed
+            } else {
+                // Create a new token
+                resetToken = new PasswordResetToken(token, jobSeeker);
+            }
+
+            tokenRepository.save(resetToken);
+            emailService.sendResetLink(email, token);
+        }
+    }
+
+
+    public void resetPassword(String token, String newPassword) {
+        PasswordResetToken resetToken = tokenRepository.findByToken(token);
+        if (resetToken != null && !resetToken.isExpired()) {
+            JobSeeker jobSeeker = resetToken.getJobSeeker();
+            jobSeeker.setPassword(passwordEncoder.encode(newPassword));
+            jobSeekerRepository.save(jobSeeker);
+            tokenRepository.delete(resetToken);
+        } else {
+            throw new RuntimeException("Invalid or expired token.");
+        }
+    }
+
+    public JobSeeker getJobSeekerByUserName(String userName) {
+        return jobSeekerRepository.findByUserName(userName);
     }
 }

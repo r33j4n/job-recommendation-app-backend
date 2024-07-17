@@ -5,7 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CreateApplicationResponseDTO {
+public class ForgetPasswordResponseDTO {
+
     private String message;
-    private Boolean isDuplicated;
+
+    private Boolean isEmailSent;
+
 }
