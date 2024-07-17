@@ -1,5 +1,6 @@
 package com.mora.jobrecommendationapp.repositories;
 
+import com.mora.jobrecommendationapp.entities.JobProvider;
 import com.mora.jobrecommendationapp.entities.JobSeeker;
 import com.mora.jobrecommendationapp.entities.PasswordResetToken;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,5 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
     PasswordResetToken findByToken(String token);
 
     Optional<PasswordResetToken> findByJobSeeker(JobSeeker jobSeeker);
+
 }
