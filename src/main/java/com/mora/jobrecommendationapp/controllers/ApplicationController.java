@@ -2,6 +2,7 @@ package com.mora.jobrecommendationapp.controllers;
 
 import com.mora.jobrecommendationapp.DTO.CreateApplicationRequestDTO;
 import com.mora.jobrecommendationapp.DTO.CreateApplicationResponseDTO;
+import com.mora.jobrecommendationapp.DTO.DeleteApplicationResponseDTO;
 import com.mora.jobrecommendationapp.entities.Application;
 import com.mora.jobrecommendationapp.entities.Job;
 import com.mora.jobrecommendationapp.entities.JobSeeker;
@@ -48,6 +49,9 @@ public class ApplicationController {
         return applicationService.getApplicationsByJobId(jobId);
     }
 
-
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<DeleteApplicationResponseDTO> deleteApplicationById(@PathVariable("id") Long applicationId) {
+        return ResponseEntity.ok(applicationService.deleteApplicationById(applicationId));
+    }
 
 }
