@@ -72,4 +72,7 @@ public class ApplicationService {
         return applicationRepository.findAll();
     }
 
+    public List<JobSeeker> getApplicationsByJobId(Long jobId) {
+        return applicationRepository.findApplicationsByJobId(jobId);
+    }
 }

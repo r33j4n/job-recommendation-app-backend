@@ -28,4 +28,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Application a WHERE a.job.jobId = :jobId AND a.jobSeeker.jobSeekerId = :jobSeekerId")
     boolean findByJobSeekerIdAndJobId(@Param("jobSeekerId") Long jobSeekerId,@Param("jobId") Long jobId );
 
+    @Query("SELECT a.jobSeeker FROM Application a WHERE a.job.jobId = :jobId")
+    List<JobSeeker> findApplicationsByJobId(Long jobId);
 }
