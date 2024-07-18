@@ -2,6 +2,8 @@ package com.mora.jobrecommendationapp.services;
 
 import com.mora.jobrecommendationapp.DTO.CreateApplicationRequestDTO;
 import com.mora.jobrecommendationapp.DTO.CreateApplicationResponseDTO;
+import com.mora.jobrecommendationapp.DTO.DeleteApplicationRequestDTO;
+import com.mora.jobrecommendationapp.DTO.DeleteApplicationResponseDTO;
 import com.mora.jobrecommendationapp.entities.Application;
 import com.mora.jobrecommendationapp.entities.Job;
 import com.mora.jobrecommendationapp.entities.JobProvider;
@@ -74,5 +76,21 @@ public class ApplicationService {
 
     public List<JobSeeker> getApplicationsByJobId(Long jobId) {
         return applicationRepository.findApplicationsByJobId(jobId);
+    }
+
+    public DeleteApplicationResponseDTO deleteApplicationById(Long applicationId) {
+        applicationRepository.deleteById(applicationId);
+        return DeleteApplicationResponseDTO.builder()
+                .message("Application Deleted Successfully")
+                .isDeleted(true)
+                .build();
+    }
+
+    public DeleteApplicationResponseDTO deleteApplicationByJobIdAndJobSeekerId(DeleteApplicationRequestDTO deleteApplicationRequestDTO) {
+        applicationRepository.deleteByJobSeekerIdAndJobId(deleteApplicationRequestDTO.getJobSeekerId(),deleteApplicationRequestDTO.getJobId());
+        return DeleteApplicationResponseDTO.builder()
+                .message("Application Deleted Successfully")
+                .isDeleted(true)
+                .build();
     }
 }
