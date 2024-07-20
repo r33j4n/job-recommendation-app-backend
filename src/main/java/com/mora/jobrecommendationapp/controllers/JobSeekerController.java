@@ -6,6 +6,9 @@ import com.mora.jobrecommendationapp.services.JobSeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @CrossOrigin("*")
 @RestController
@@ -80,5 +83,13 @@ public class JobSeekerController {
         jobSeekerService.resetPassword(resetPasswordRequestDTO.getToken(), resetPasswordRequestDTO.getPassword());
         return ResponseEntity.ok("Password has been reset.");
     }
+
+    @PostMapping("/upload-cv-img/{id}")
+    public ResponseEntity<UploadCVResponseDTO> uploadCV(@PathVariable ("id") long id, @RequestParam("file") MultipartFile file) throws IOException {
+
+        return ResponseEntity.ok(jobSeekerService.uploadCV(id, file));
+
+    }
+
 
 }
