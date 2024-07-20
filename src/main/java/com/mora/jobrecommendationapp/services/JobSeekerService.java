@@ -10,9 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -252,5 +253,29 @@ public class JobSeekerService {
 
     public JobSeeker getJobSeekerByUserName(String userName) {
         return jobSeekerRepository.findByUserName(userName);
+    }
+
+    public UploadCVResponseDTO uploadCV(long id, MultipartFile file) {
+        Optional<JobSeeker> jobSeekerOptional = jobSeekerRepository.findById(id);
+        if (jobSeekerOptional.isPresent()) {
+            JobSeeker jobSeeker = jobSeekerOptional.get();
+            try {
+                jobSeeker.setCvFile(file.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            jobSeeker.setCvFileType(file.getContentType());
+            jobSeeker.setCvFileName(file.getOriginalFilename());
+            jobSeeker.setIsCvUploaded(true);
+            jobSeekerRepository.save(jobSeeker);
+
+            UploadCVResponseDTO uploadCVResponseDTO = UploadCVResponseDTO.builder().
+                    message("CV Uploaded Successfully")
+                    .build();
+            return uploadCVResponseDTO;
+        } else {
+            throw new RuntimeException("Job Seeker not found");
+        }
+
     }
 }
