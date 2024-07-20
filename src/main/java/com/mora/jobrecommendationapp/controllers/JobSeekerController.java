@@ -96,5 +96,10 @@ public class JobSeekerController {
         return ResponseEntity.ok(jobSeekerService.getCV(id));
     }
 
+    @DeleteMapping("/delete-cv/{id}")
+    public ResponseEntity<DeleteCVResponseDTO> deleteCV(@PathVariable("id") long id) {
+        return ResponseEntity.ok((DeleteCVResponseDTO) jobSeekerService.deleteCV(id));
+    }
+
 
 }

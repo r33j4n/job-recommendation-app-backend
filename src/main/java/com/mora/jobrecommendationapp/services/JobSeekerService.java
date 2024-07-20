@@ -294,4 +294,22 @@ public class JobSeekerService {
             throw new RuntimeException("Job Seeker not found");
         }
     }
+
+    public Object deleteCV(long id) {
+        Optional<JobSeeker> jobSeekerOptional = jobSeekerRepository.findById(id);
+        if (jobSeekerOptional.isPresent()) {
+            JobSeeker jobSeeker = jobSeekerOptional.get();
+            jobSeeker.setCvFile(null);
+            jobSeeker.setCvFileName(null);
+            jobSeeker.setCvFileType(null);
+            jobSeeker.setIsCvUploaded(false);
+            jobSeekerRepository.save(jobSeeker);
+            DeleteCVResponseDTO deleteCVResponseDTO = DeleteCVResponseDTO.builder().
+                    message("CV Deleted Successfully")
+                    .build();
+            return deleteCVResponseDTO;
+        } else {
+            throw new RuntimeException("Job Seeker not found");
+        }
+    }
 }
