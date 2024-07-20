@@ -91,5 +91,10 @@ public class JobSeekerController {
 
     }
 
+    @GetMapping("/get-cv/{id}")
+    public ResponseEntity<RetriveCVFileResponseDTO> getCV(@PathVariable("id") long id) {
+        return ResponseEntity.ok(jobSeekerService.getCV(id));
+    }
+
 
 }

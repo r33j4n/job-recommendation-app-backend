@@ -278,4 +278,20 @@ public class JobSeekerService {
         }
 
     }
+
+    public RetriveCVFileResponseDTO getCV(long id) {
+        Optional<JobSeeker> jobSeekerOptional = jobSeekerRepository.findById(id);
+        if (jobSeekerOptional.isPresent()) {
+            JobSeeker jobSeeker = jobSeekerOptional.get();
+
+            RetriveCVFileResponseDTO retriveCVFileResponseDTO = RetriveCVFileResponseDTO.builder().
+                    cvFile(jobSeeker.getCvFile())
+                    .fileName(jobSeeker.getCvFileName())
+                    .build();
+            return retriveCVFileResponseDTO;
+
+        } else {
+            throw new RuntimeException("Job Seeker not found");
+        }
+    }
 }
