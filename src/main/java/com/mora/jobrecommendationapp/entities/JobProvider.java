@@ -49,6 +49,11 @@ public class JobProvider {
     @OneToMany(mappedBy = "jobProvider", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore // Prevents serialization of the jobs list when JobProvider is serialized
     private List<Job> jobs = new ArrayList<>();
+    @Column
+    private String securityQuestion;
+
+    @Column
+    private String securityAnswerHash;
 
 }
 

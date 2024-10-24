@@ -43,8 +43,9 @@ public class JobProviderService {
 
     public CreateJobProviderResponseDTO createJobProvider(CreateJobProviderRequestDTO jobProviderRequest) {
         String encryptedPassword = bCryptPasswordEncoder.encode(jobProviderRequest.getPassword());
-        JobProvider jobProvider1 = jobProviderRepository.findByUserName(jobProviderRequest.getUserName());
-        if (jobProvider1 == null) {
+        String securityAnswerHash = bCryptPasswordEncoder.encode(jobProviderRequest.getSecurityAnswer());
+        JobProvider existingJobProvider = jobProviderRepository.findByUserName(jobProviderRequest.getUserName());
+        if (existingJobProvider == null) {
             JobProvider jobProvider = JobProvider.builder()
                     .companyName(jobProviderRequest.getCompanyName())
                     .industry(jobProviderRequest.getIndustry())
@@ -54,16 +55,18 @@ public class JobProviderService {
                     .phoneNumber(jobProviderRequest.getPhoneNumber())
                     .address(jobProviderRequest.getAddress())
                     .registeredDate(jobProviderRequest.getRegisteredDate())
+                    .securityQuestion(jobProviderRequest.getSecurityQuestion())
+                    .securityAnswerHash(securityAnswerHash)
                     .build();
             jobProviderRepository.save(jobProvider);
-            CreateJobProviderResponseDTO createJobProviderResponseDTO = CreateJobProviderResponseDTO.builder().
-                    message("Job Provider Created Successfully for the company "+jobProviderRequest.getCompanyName())
+            CreateJobProviderResponseDTO createJobProviderResponseDTO = CreateJobProviderResponseDTO.builder()
+                    .message("Job Provider Created Successfully for the company " + jobProviderRequest.getCompanyName())
                     .isDuplicated(false)
                     .build();
             return createJobProviderResponseDTO;
         } else {
-            CreateJobProviderResponseDTO createJobProviderResponseDTO = CreateJobProviderResponseDTO.builder().
-                    message("Job Provider Already Exists for the company "+jobProviderRequest.getCompanyName())
+            CreateJobProviderResponseDTO createJobProviderResponseDTO = CreateJobProviderResponseDTO.builder()
+                    .message("Job Provider Already Exists for the company " + jobProviderRequest.getCompanyName())
                     .isDuplicated(true)
                     .build();
             return createJobProviderResponseDTO;
@@ -207,4 +210,29 @@ public class JobProviderService {
             throw new RuntimeException("Invalid or expired token.");
         }
     }
+    public GetSecurityQuestionResponseDTO getSecurityQuestion(GetSecurityQuestionRequestDTO requestDTO) {
+        JobProvider jobProvider = jobProviderRepository.findByUserName(requestDTO.getUserName());
+        GetSecurityQuestionResponseDTO responseDTO = new GetSecurityQuestionResponseDTO();
+        if (jobProvider != null) {
+            responseDTO.setSuccess(true);
+            responseDTO.setSecurityQuestion(jobProvider.getSecurityQuestion());
+        } else {
+            responseDTO.setSuccess(false);
+        }
+        return responseDTO;
+    }
+
+    public ValidateSecurityAnswerResponseDTO validateSecurityAnswer(ValidateSecurityAnswerRequestDTO requestDTO) {
+        JobProvider jobProvider = jobProviderRepository.findByUserName(requestDTO.getUserName());
+        ValidateSecurityAnswerResponseDTO responseDTO = new ValidateSecurityAnswerResponseDTO();
+        if (jobProvider != null) {
+            boolean isAnswerMatched = bCryptPasswordEncoder.matches(
+                    requestDTO.getSecurityAnswer(), jobProvider.getSecurityAnswerHash());
+            responseDTO.setSuccess(isAnswerMatched);
+        } else {
+            responseDTO.setSuccess(false);
+        }
+        return responseDTO;
+    }
+
 }

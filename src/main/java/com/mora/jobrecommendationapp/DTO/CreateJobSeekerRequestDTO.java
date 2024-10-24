@@ -20,4 +20,6 @@ public class CreateJobSeekerRequestDTO {
     private String gender;
     private String registeredDate;
     private Boolean isCvUploaded;
+    private String securityQuestion;
+    private String securityAnswer;
 }

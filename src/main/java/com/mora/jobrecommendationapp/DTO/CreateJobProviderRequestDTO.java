@@ -19,4 +19,6 @@ public class CreateJobProviderRequestDTO {
     private String phoneNumber;
     private String address;
     private Date registeredDate;
+    private String securityQuestion;
+    private String securityAnswer;
 }

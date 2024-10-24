@@ -6,6 +6,7 @@ import com.mora.jobrecommendationapp.entities.JobProvider;
 import com.mora.jobrecommendationapp.entities.JobSeeker;
 import com.mora.jobrecommendationapp.services.JobProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,22 +60,35 @@ public class JobProviderController {
         return jobProviderService.getJobProviderById1(id);
     }
 
+    @PostMapping("/get-security-question")
+    public ResponseEntity<GetSecurityQuestionResponseDTO> getSecurityQuestion(@RequestBody GetSecurityQuestionRequestDTO requestDTO) {
+        return ResponseEntity.ok(jobProviderService.getSecurityQuestion(requestDTO));
+    }
+
+    @PostMapping("/validate-security-answer")
+    public ResponseEntity<ValidateSecurityAnswerResponseDTO> validateSecurityAnswer(@RequestBody ValidateSecurityAnswerRequestDTO requestDTO) {
+        return ResponseEntity.ok(jobProviderService.validateSecurityAnswer(requestDTO));
+    }
+
     @PostMapping("/forgotPassword")
     public ResponseEntity<String> forgotPassword(@RequestBody ForgetPasswordRequestDTO forgetPasswordRequestDTO) {
-        JobProvider jobProvider =jobProviderService.getJobProviderByUserName(forgetPasswordRequestDTO.getUserName());
+        JobProvider jobProvider = jobProviderService.getJobProviderByUserName(forgetPasswordRequestDTO.getUserName());
 
         if (jobProvider != null) {
             jobProviderService.forgotPassword(jobProvider.getEmail());
             return ResponseEntity.ok("Password reset link sent to your email.");
-        }
-        else {
-            return ResponseEntity.ok("User not found");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDTO resetPasswordRequestDTO) {
-        jobProviderService.resetPassword(resetPasswordRequestDTO.getToken(), resetPasswordRequestDTO.getPassword());
-        return ResponseEntity.ok("Password has been reset.");
+        try {
+            jobProviderService.resetPassword(resetPasswordRequestDTO.getToken(), resetPasswordRequestDTO.getPassword());
+            return ResponseEntity.ok("Password has been reset.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }

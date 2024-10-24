@@ -4,6 +4,7 @@ import com.mora.jobrecommendationapp.DTO.*;
 import com.mora.jobrecommendationapp.entities.JobSeeker;
 import com.mora.jobrecommendationapp.services.JobSeekerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,18 +65,14 @@ public class JobSeekerController {
 
     @PostMapping("/forgotPassword")
     public ResponseEntity<String> forgotPassword(@RequestBody ForgetPasswordRequestDTO forgetPasswordRequestDTO) {
-        JobSeeker jobSeeker =jobSeekerService.getJobSeekerByUserName(forgetPasswordRequestDTO.getUserName());
+        JobSeeker jobSeeker = jobSeekerService.getJobSeekerByUserName(forgetPasswordRequestDTO.getUserName());
 
         if (jobSeeker != null) {
             jobSeekerService.forgotPassword(jobSeeker.getEmail());
             return ResponseEntity.ok("Password reset link sent to your email.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        else {
-            return ResponseEntity.ok("User not found");
-        }
-//        System.out.println(forgetPasswordRequestDTO.getEmailAddress());
-//        jobSeekerService.forgotPassword(forgetPasswordRequestDTO.getEmailAddress());
-//        return ResponseEntity.ok("Password reset link sent to your email.");
     }
 
     @PostMapping("/reset-password")
@@ -99,6 +96,16 @@ public class JobSeekerController {
     @DeleteMapping("/delete-cv/{id}")
     public ResponseEntity<DeleteCVResponseDTO> deleteCV(@PathVariable("id") long id) {
         return ResponseEntity.ok((DeleteCVResponseDTO) jobSeekerService.deleteCV(id));
+    }
+
+    @PostMapping("/get-security-question")
+    public ResponseEntity<GetSecurityQuestionResponseDTO> getSecurityQuestion(@RequestBody GetSecurityQuestionRequestDTO requestDTO) {
+        return ResponseEntity.ok(jobSeekerService.getSecurityQuestion(requestDTO));
+    }
+
+    @PostMapping("/validate-security-answer")
+    public ResponseEntity<ValidateSecurityAnswerResponseDTO> validateSecurityAnswer(@RequestBody ValidateSecurityAnswerRequestDTO requestDTO) {
+        return ResponseEntity.ok(jobSeekerService.validateSecurityAnswer(requestDTO));
     }
 
 
