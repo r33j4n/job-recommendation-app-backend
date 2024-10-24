@@ -45,8 +45,10 @@ public class JobSeekerService {
 
     public CreateJobSeekerResponseDTO createJobSeeker(CreateJobSeekerRequestDTO jobSeekerRequest) {
         String encryptedPassword = bCryptPasswordEncoder.encode(jobSeekerRequest.getPassword());
-        JobSeeker jobSeeker1 = jobSeekerRepository.findByUserName(jobSeekerRequest.getUserName());
-        if (jobSeeker1 == null) {
+        String securityAnswerHash = bCryptPasswordEncoder.encode(jobSeekerRequest.getSecurityAnswer());
+
+        JobSeeker existingJobSeeker = jobSeekerRepository.findByUserName(jobSeekerRequest.getUserName());
+        if (existingJobSeeker == null) {
             JobSeeker jobSeeker = JobSeeker.builder()
                     .firstName(jobSeekerRequest.getFirstName())
                     .lastName(jobSeekerRequest.getLastName())
@@ -59,19 +61,22 @@ public class JobSeekerService {
                     .gender(jobSeekerRequest.getGender())
                     .isCvUploaded(false)
                     .registeredDate(jobSeekerRequest.getRegisteredDate())
+                    .securityQuestion(jobSeekerRequest.getSecurityQuestion())
+                    .securityAnswerHash(securityAnswerHash)
                     .build();
             jobSeekerRepository.save(jobSeeker);
-            CreateJobSeekerResponseDTO createJobSeekerResponseDTO = CreateJobSeekerResponseDTO.builder().
-                    message("Job Seeker Created Successfully for the user name "+jobSeekerRequest.getUserName())
+            CreateJobSeekerResponseDTO responseDTO = CreateJobSeekerResponseDTO.builder()
+                    .message("Job Seeker Created Successfully for the user name " + jobSeekerRequest.getUserName())
                     .isDuplicated(false)
                     .build();
-            return createJobSeekerResponseDTO;
+            return responseDTO;
         } else {
-            CreateJobSeekerResponseDTO createJobSeekerResponseDTO = CreateJobSeekerResponseDTO.builder().
-                    message("Job Seeker Already Exists for the user name "+jobSeekerRequest.getUserName())
+            CreateJobSeekerResponseDTO responseDTO = CreateJobSeekerResponseDTO.builder()
+                    .message("Job Seeker Already Exists for the user name " + jobSeekerRequest.getUserName())
                     .isDuplicated(true)
                     .build();
-            return createJobSeekerResponseDTO;        }
+            return responseDTO;
+        }
     }
 
     public LoginResponse performlogin(LoginJobSeekerRequestDTO loginJobSeekerRequestDTO) {
@@ -311,5 +316,29 @@ public class JobSeekerService {
         } else {
             throw new RuntimeException("Job Seeker not found");
         }
+    }
+    public GetSecurityQuestionResponseDTO getSecurityQuestion(GetSecurityQuestionRequestDTO requestDTO) {
+        JobSeeker jobSeeker = jobSeekerRepository.findByUserName(requestDTO.getUserName());
+        GetSecurityQuestionResponseDTO responseDTO = new GetSecurityQuestionResponseDTO();
+        if (jobSeeker != null) {
+            responseDTO.setSuccess(true);
+            responseDTO.setSecurityQuestion(jobSeeker.getSecurityQuestion());
+        } else {
+            responseDTO.setSuccess(false);
+        }
+        return responseDTO;
+    }
+
+    public ValidateSecurityAnswerResponseDTO validateSecurityAnswer(ValidateSecurityAnswerRequestDTO requestDTO) {
+        JobSeeker jobSeeker = jobSeekerRepository.findByUserName(requestDTO.getUserName());
+        ValidateSecurityAnswerResponseDTO responseDTO = new ValidateSecurityAnswerResponseDTO();
+        if (jobSeeker != null) {
+            boolean isAnswerMatched = bCryptPasswordEncoder.matches(
+                    requestDTO.getSecurityAnswer(), jobSeeker.getSecurityAnswerHash());
+            responseDTO.setSuccess(isAnswerMatched);
+        } else {
+            responseDTO.setSuccess(false);
+        }
+        return responseDTO;
     }
 }

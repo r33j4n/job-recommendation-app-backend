@@ -64,4 +64,10 @@ public class JobSeeker {
     @Column(name = "cv_file_name")
     private String cvFileName;
 
+    @Column
+    private String securityQuestion;
+
+    @Column
+    private String securityAnswerHash;
+
 }
