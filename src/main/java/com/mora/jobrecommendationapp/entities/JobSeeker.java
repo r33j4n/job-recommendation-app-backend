@@ -35,7 +35,7 @@ public class JobSeeker {
     private String password;
     @Column
     private String phoneNumber;
-    @Column
+    @Column (length = 50000)
     private String address;
     @Column
     private String dob;
@@ -45,9 +45,9 @@ public class JobSeeker {
     private String registeredDate;
     @Column
     private String education;
-    @Column
+    @Column (length = 50000)
     private String experience;
-    @Column
+    @Column (length = 50000)
     private String skills;
     @Column
     private Boolean isCvUploaded;
@@ -64,7 +64,7 @@ public class JobSeeker {
     @Column(name = "cv_file_name")
     private String cvFileName;
 
-    @Column
+    @Column (length = 500)
     private String securityQuestion;
 
     @Column
